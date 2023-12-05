@@ -36,22 +36,22 @@ class SalonTracker:
             self.driver.get(result)
             current_url = self.driver.current_url
             try:
-                content = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainContents"]/div[11]/table/tbody/tr[1]/td/a')))
+                content = WebDriverWait(self.driver, 1).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainContents"]/div[11]/table/tbody/tr[1]/td/a')))
                 content.click()
                 tel = self.get_content_by_xpath('//*[@id="mainContents"]/table/tbody/tr/td').text
                 self.driver.get(current_url)
             except Exception as e:
                 tel = None
             name = self.driver.find_element(By.ID, "headSummary").text
-            address = self.get_content_by_xpath('//*[@id="mainContents"]/div[5]/table/tbody/tr[1]/td').text
-            url = self.get_content_by_xpath('//*[@id="store_hp"]').text
+            address = self.get_content_by_xpath('//*[@id="mainContents"]/div[5]/table/tbody/tr[1]/td')
+            url = self.get_content_by_xpath('//*[@id="store_hp"]')
             contents.append([index, name, url, address, tel])
 
         return contents
 
     def get_content_by_xpath(self, xpath: str) -> Tuple[str, None]:
         try:
-            content = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.XPATH, xpath)))
+            content = WebDriverWait(self.driver, 1).until(EC.presence_of_element_located((By.XPATH, xpath)))
             return content.text
         except Exception as e:
             return None

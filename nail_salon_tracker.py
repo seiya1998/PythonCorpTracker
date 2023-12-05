@@ -36,7 +36,7 @@ class NailSalonTracker:
             self.driver.get(result)
             current_url = self.driver.current_url
             try:
-                content = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainContents"]/div[10]/table/tbody/tr[1]/td/a')))
+                content = WebDriverWait(self.driver, 1).until(EC.presence_of_element_located((By.XPATH, '//*[@id="mainContents"]/div[10]/table/tbody/tr[1]/td/a')))
                 content.click()
                 tel = self.get_content_by_xpath('//*[@id="mainContents"]/table/tbody/tr/td').text
                 self.driver.get(current_url)
@@ -51,7 +51,7 @@ class NailSalonTracker:
 
     def get_content_by_xpath(self, xpath: str) -> Tuple[str, None]:
         try:
-            content = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.XPATH, xpath)))
+            content = WebDriverWait(self.driver, 1).until(EC.presence_of_element_located((By.XPATH, xpath)))
             return content.text
         except Exception as e:
             return None

@@ -18,26 +18,28 @@ class DentalClinicTracker:
     def get_contents(self) -> list:
         urls = []
         contents = []
+        results = self.driver.find_elements(By.CLASS_NAME, 'result')
+        for result in results:
+            urls.append(result.find_element(By.CLASS_NAME, 'result__name').get_attribute('href'))
 
-        while True:
-            # 現在のURL（一覧）を取得
-            current_url = self.driver.current_url
-            results = self.driver.find_elements(By.CLASS_NAME, 'result')
+        # while True:
+        #     # 現在のURL（一覧）を取得
+        #     current_url = self.driver.current_url
 
-            # 次へボタンののクラスを取得
-            next_page_class = self.driver.find_element(By.CLASS_NAME, 'pagination__next').get_attribute('class')
+        #     # 次へボタンののクラスを取得
+        #     next_page_class = self.driver.find_element(By.CLASS_NAME, 'pagination__next').get_attribute('class')
 
-            # 次へボタンのクラスに「is-disabled」があれば終わり
-            if 'is-disabled' in next_page_class:
-                break
-            else:
-                results = self.driver.find_elements(By.CLASS_NAME, 'result')
-                for result in results:
-                    urls.append(result.find_element(By.CLASS_NAME, 'result__name').get_attribute('href'))
+        #     # 次へボタンのクラスに「is-disabled」があれば終わり
+        #     if 'is-disabled' in next_page_class:
+        #         break
+        #     else:
+        #         results = self.driver.find_elements(By.CLASS_NAME, 'result')
+        #         for result in results:
+        #             urls.append(result.find_element(By.CLASS_NAME, 'result__name').get_attribute('href'))
                 
-                # 次へクリック
-                self.driver.get(current_url)
-                self.driver.find_element(By.CLASS_NAME, 'pagination__next').click()
+        #         # 次へクリック
+        #         self.driver.get(current_url)
+        #         self.driver.find_element(By.CLASS_NAME, 'pagination__next').click()
 
         for index, result in enumerate(urls, 1):
             self.driver.get(result)
@@ -50,11 +52,8 @@ class DentalClinicTracker:
         return contents
 
     def get_content_by_xpath(self, xpath: str) -> Tuple[str, None]:
-        if len(self.driver.find_elements(By.XPATH, xpath)) < 0:
-            None
-
         try:
-            content = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.XPATH, xpath)))
+            content = self.driver.find_element(By.XPATH, xpath)
             return content.text
         except Exception as e:
             return None
